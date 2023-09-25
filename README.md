@@ -1,6 +1,6 @@
 # brev
 
-Scalable URL Shortening - Real-World System Design Implementation
+Scalable url shortening system implementation
 
 https://systemdesign.one/url-shortening-system-design
 
