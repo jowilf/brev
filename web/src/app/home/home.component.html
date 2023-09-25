@@ -1,0 +1,76 @@
+<div class="uk-child-width-expand@s" uk-height-viewport="expand: true" uk-grid>
+    <div class="uk-margin uk-margin-auto-left uk-margin-auto-right@m uk-width-1-2@s">
+        <h2 class="uk-text-center">Shorten a long link</h2>
+
+        <form class="uk-form-stacked" (ngSubmit)="onSubmit()">
+            <div class="uk-margin">
+                <label class="uk-form-label" for="originalUrl">Paste a long URL</label>
+                <div class="uk-form-controls">
+                    <input id="originalUrl" name="originalUrl" class="uk-input"
+                        [ngClass]="[errors && errors.originalUrl? 'uk-form-danger': '']" type="url" required
+                        [(ngModel)]="shortenUrlRequest.originalUrl"
+                        placeholder="Example: http://super-long-link.com/shorten-it" />
+                </div>
+                <div *ngIf="errors && errors.originalUrl" class="uk-text-danger">
+                    <span>{{errors.originalUrl}}</span>
+                </div>
+            </div>
+            <div class="uk-margin">
+                <label class="uk-form-label" for="customShortUrl">Custom short url (Optional) </label>
+                <div class="uk-form-controls">
+                    <input id="customShortUrl" name="customShortUrl" class="uk-input"
+                        [ngClass]="[errors && errors.originalUrl? 'uk-form-danger': '']" type="text"
+                        [(ngModel)]="shortenUrlRequest.customShortUrl" placeholder="Example: favorite-link" />
+                </div>
+                <div *ngIf="errors && errors.customShortUrl" class="uk-text-danger">
+                    <span>{{errors.customShortUrl}}</span>
+                </div>
+            </div>
+            <div class="uk-margin uk-text-center">
+                <button class="uk-button uk-button-primary uk-width-1-1" type="submit" [disabled]="loading">
+                    <div class="uk-flex uk-flex-middle uk-flex-center">
+                        <div *ngIf="loading" uk-spinner="ratio: 0.7" class="uk-margin-small-right"></div>
+                        <span>Create</span>
+                    </div>
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="uk-margin uk-margin-left uk-overflow-auto" uk-height-viewport="expand: true">
+        <div class="uk-text-center" uk-grid>
+            <div class="uk-width-auto">
+                ({{myLinks?.totalItems}}) links created
+            </div>
+            <div class="uk-width-expand">
+                <ul *ngIf="myLinks" class="uk-pagination uk-flex-right" uk-margin>
+                    <li [ngClass]="[myLinks.currentPage>0?'uk-active':'uk-disable']"><a (click)="previousPage()"
+                            href="#"><span class="uk-margin-small-right" uk-pagination-previous></span>Previous</a></li>
+                    <li class="uk-active"><span>{{myLinks.currentPage+1}}</span></li>
+                    <li [ngClass]="[(myLinks.currentPage+1)>=myLinks.totalPages?'uk-disable':'uk-active']"><a
+                            (click)="nextPage()">Next<span class="uk-margin-small-left" uk-pagination-next></span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="uk-child-width-1-1@m" uk-grid
+            uk-scrollspy="cls: uk-animation-slide-bottom; target: .uk-card; delay: 50; repeat: true"
+            *ngIf="myLinks && myLinks.data">
+
+            <ng-template ngFor let-item [ngForOf]="myLinks.data" let-i="index">
+                <div>
+                    <div class="uk-card uk-background-muted uk-border-rounded uk-card-small uk-card-body">
+                        <h3 class="uk-card-title"><a [href]="item.shortUrl" target="_blank"><span
+                                    class="uk-margin-right" uk-icon="icon: forward"></span>/{{item.path!}}</a></h3>
+                        <p class="uk-text-small"><span class="uk-margin-right"
+                                uk-icon="icon: link"></span>{{item.originalUrl}}</p>
+                        <button (click)="showAnalytics(item)" class="uk-button uk-button-secondary uk-button-small">Show
+                            analytics</button>
+                    </div>
+                </div>
+            </ng-template>
+
+        </div>
+    </div>
+</div>
+<app-analytics-modal #modal></app-analytics-modal>

@@ -1,0 +1,60 @@
+<div class="uk-margin uk-margin-auto-left uk-margin-auto-right@m uk-width-1-2@s">
+    <h2 class="uk-text-center">Create your account</h2>
+    <div class="uk-margin uk-text-center">
+        <span class="uk-text-muted">Already have an account? </span> <a href="/login">Log
+            in</a>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="uk-form-stacked">
+        <div class="uk-margin">
+            <label class="uk-form-label" for="username">Email address or username</label>
+            <div class="uk-form-controls">
+                <input id="username" name="username" class="uk-input"
+                    [ngClass]="[errors && errors.username? 'uk-form-danger': '']" type="text" required
+                    [(ngModel)]="userRegister.username" />
+            </div>
+            <div *ngIf="errors && errors.username" class="uk-text-danger">
+                <span>{{errors.username}}</span>
+            </div>
+        </div>
+        <div class="uk-margin">
+            <label class="uk-form-label" for="firstName">First Name</label>
+            <div class="uk-form-controls">
+                <input id="firstName" name="firstName" class="uk-input" type="text"
+                    [ngClass]="[errors && errors.firstName? 'uk-form-danger': '']" required
+                    [(ngModel)]="userRegister.firstName" />
+            </div>
+            <div *ngIf="errors && errors.firstName" class="uk-text-danger">
+                <span>{{errors.firstName}}</span>
+            </div>
+        </div>
+        <div class="uk-margin">
+            <label class="uk-form-label" for="lastName">Last Name</label>
+            <div class="uk-form-controls">
+                <input id="lastName" name="lastName" class="uk-input" type="text" required
+                    [ngClass]="[errors && errors.lastName ?'uk-form-danger': '']" [(ngModel)]="userRegister.lastName" />
+            </div>
+            <div *ngIf="errors && errors.lastName" class="uk-text-danger">
+                <span>{{errors.lastName}}</span>
+            </div>
+        </div>
+        <div class="uk-margin">
+            <label class="uk-form-label" for="password">Password</label>
+            <div class="uk-form-controls">
+                <input class="uk-input" id="password" name="password" type="password" required
+                    [ngClass]="[errors && errors.password? 'uk-form-danger': '']" [(ngModel)]="userRegister.password" />
+            </div>
+            <div *ngIf="errors && errors.password" class="uk-text-danger">
+                <span>{{errors.password}}</span>
+            </div>
+        </div>
+        <div class="uk-margin uk-text-center">
+            <button class="uk-button uk-button-primary uk-width-1-1" type="submit" [disabled]="loading">
+                <div class="uk-flex uk-flex-middle uk-flex-center">
+                    <div *ngIf="loading" uk-spinner="ratio: 0.7" class="uk-margin-small-right"></div>
+                    <span>Sign up</span>
+                </div>
+            </button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,45 @@
+<div class="uk-margin uk-margin-auto-left uk-margin-auto-right@m uk-width-1-2@s">
+    <h2 class="uk-text-center">Log in and start sharing</h2>
+    <div class="uk-margin uk-text-center">
+        <span class="uk-text-muted">Don't have an account? </span><a href="/register">Sign up</a>
+    </div>
+
+    <div *ngIf="invalidCredentials">
+        <div class="uk-alert-danger" uk-alert>
+            <a class="uk-alert-close" uk-close></a>
+            <p>{{invalidCredentials}}</p>
+        </div>
+    </div>
+
+    <form class="uk-form-stacked" (ngSubmit)="onSubmit()">
+        <div class="uk-margin">
+            <label class="uk-form-label" for="username">Email address or username</label>
+            <div class="uk-form-controls">
+                <input id="username" name="username" class="uk-input"
+                    [ngClass]="[errors && errors.username? 'uk-form-danger': '']" type="text" required
+                    [(ngModel)]="loginRequest.username" />
+            </div>
+            <div *ngIf="errors && errors.username" class="uk-text-danger">
+                <span>{{errors.username}}</span>
+            </div>
+        </div>
+        <div class="uk-margin">
+            <label class="uk-form-label" for="password">Password</label>
+            <div class="uk-form-controls">
+                <input class="uk-input" id="password" name="password" type="password" required
+                    [ngClass]="[errors && errors.password? 'uk-form-danger': '']" [(ngModel)]="loginRequest.password" />
+            </div>
+            <div *ngIf="errors && errors.password" class="uk-text-danger">
+                <span>{{errors.password}}</span>
+            </div>
+        </div>
+        <div class="uk-margin uk-text-center">
+            <button class="uk-button uk-button-primary uk-width-1-1" type="submit" [disabled]="loading">
+                <div class="uk-flex uk-flex-middle uk-flex-center">
+                    <div *ngIf="loading" uk-spinner="ratio: 0.7" class="uk-margin-small-right"></div>
+                    <span>Login</span>
+                </div>
+            </button>
+        </div>
+    </form>
+</div>
