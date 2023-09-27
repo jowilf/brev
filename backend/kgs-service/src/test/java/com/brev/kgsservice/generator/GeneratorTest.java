@@ -1,6 +1,7 @@
 package com.brev.kgsservice.generator;
 
 import com.brev.kgsservice.config.AppConfig;
+import com.brev.kgsservice.config.ZookeeperTestConfiguration;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.recipes.shared.SharedCount;
@@ -16,16 +17,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(
-        {"spring.cloud.service-registry.auto-registration.enabled=false", "spring.cloud.zookeeper.enabled=false",
-                "spring.cloud.discovery.enabled=false", "spring.main.allow-bean-definition-overriding=true",
-                "app.range-offset=5",})
-@Import(GeneratorTest.Configuration.class)
+@SpringBootTest
+@Import(ZookeeperTestConfiguration.class)
+@ActiveProfiles("test")
 class GeneratorTest {
 
     @Autowired
@@ -57,30 +57,6 @@ class GeneratorTest {
             generator.nextKey();
         assertNotNull(generator.nextKey());
         assertEquals(sharedCount.getCount(), 2);
-    }
-
-    @TestConfiguration
-    static class Configuration {
-
-        @Bean(destroyMethod = "close")
-        TestingServer testingServer() throws Exception {
-            return new TestingServer();
-        }
-
-        @Bean(destroyMethod = "close")
-        CuratorFramework curatorFramework(TestingServer server) {
-            Timing timing = new Timing();
-
-            CuratorFramework curatorFramework =
-                    CuratorFrameworkFactory.builder().connectString(server.getConnectString())
-                            .sessionTimeoutMs(timing.session())
-                            .connectionTimeoutMs(timing.connection())
-                            .retryPolicy(new RetryOneTime(1))
-                            .build();
-            curatorFramework.start();
-            return curatorFramework;
-        }
-
     }
 
 
