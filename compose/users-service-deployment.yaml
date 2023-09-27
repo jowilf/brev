@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.30.0 (9d8dcb518)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: users-service
+  name: users-service
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: users-service
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.30.0 (9d8dcb518)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/compose-default: "true"
+        io.kompose.service: users-service
+    spec:
+      containers:
+        - env:
+            - name: app.kafka.topic
+            - name: jwt.issuer
+            - name: jwt.secret
+            - name: jwt.token.ttl
+            - name: server.port
+              value: "80"
+            - name: spring.datasource.password
+            - name: spring.datasource.url
+              value: jdbc:mysql://mysql:3306/
+            - name: spring.datasource.username
+            - name: spring.jpa.hibernate.ddl-auto
+              value: create
+            - name: spring.profiles.active
+              value: production
+          image: brev/users-service
+          name: users-service
+          ports:
+            - containerPort: 80
+              hostPort: 8083
+              protocol: TCP
+          resources: {}
+      restartPolicy: Always
+status: {}
