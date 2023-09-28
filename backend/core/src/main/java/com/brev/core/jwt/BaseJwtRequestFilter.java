@@ -11,6 +11,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+
 public abstract class BaseJwtRequestFilter extends OncePerRequestFilter {
 
     private final JwtTokenService jwtTokenService;
@@ -25,6 +26,7 @@ public abstract class BaseJwtRequestFilter extends OncePerRequestFilter {
                                     final FilterChain chain) throws ServletException, IOException {
         // look for Bearer auth header
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+
         if (header == null || !header.startsWith("Bearer ") || header.split(" ").length > 2) {
             chain.doFilter(request, response);
             return;
