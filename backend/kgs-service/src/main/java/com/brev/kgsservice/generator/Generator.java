@@ -25,7 +25,7 @@ public class Generator {
 
     private final SharedCount sharedCount;
 
-    private final BigInteger rangeOffset;
+    private final BigInteger rangeSize;
 
     private final Encoder encoder;
 
@@ -35,7 +35,7 @@ public class Generator {
     @Autowired
     public Generator(SharedCount sharedCount, AppConfig config, Encoder encoder) {
         this.sharedCount = sharedCount;
-        this.rangeOffset = BigInteger.valueOf(config.getRangeOffset());
+        this.rangeSize = BigInteger.valueOf(config.getRangeSize());
         this.encoder = encoder;
     }
 
@@ -44,8 +44,8 @@ public class Generator {
     private void requestNewRange() {
         log.info("Requesting new range....");
         BigInteger availableRange = BigInteger.valueOf(getNextAvailableRange());
-        BigInteger startValue = availableRange.multiply(rangeOffset);
-        BigInteger endValue = startValue.add(rangeOffset).subtract(BigInteger.ONE);
+        BigInteger startValue = availableRange.multiply(rangeSize);
+        BigInteger endValue = startValue.add(rangeSize).subtract(BigInteger.ONE);
         log.info("Acquired new range: [" + startValue + " ; " + endValue + "]");
         fillInternalQueue(startValue);
     }
@@ -60,7 +60,7 @@ public class Generator {
     private void fillInternalQueue(BigInteger startValue) {
         queue.clear();
         Stream.iterate(startValue, n -> n.add(BigInteger.ONE))
-                .limit(rangeOffset.intValueExact())
+                .limit(rangeSize.intValueExact())
                 .collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
                     Collections.shuffle(list);
                     return list;
@@ -85,6 +85,10 @@ public class Generator {
     synchronized public String nextKey() {
         if (queue.isEmpty()) requestNewRange();
         return queue.pop();
+    }
+
+    public void clear(){
+        queue.clear();
     }
 
 }

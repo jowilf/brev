@@ -21,7 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(indexes = @Index(columnList = "username"))
+@Table(name = "users", indexes = @Index(columnList = "username"))
 public class User implements UserDetails {
     @Id
     @GeneratedValue(generator = "user-id-generator")

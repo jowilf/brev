@@ -79,7 +79,7 @@ services:
       server.port: 80
       spring.profiles.active: production
       app.zookeeper-path: "/${APP_NAME}/kgs/range"
-      app.range-offset: 100000
+      app.range-size: 100000
       spring.cloud.zookeeper.connect-string: "zookeeper:2181"
 
   url-service:
