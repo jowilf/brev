@@ -18,7 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/urls")
+@RequestMapping("/api/v1/urls")
 public class ApiController {
 
     private final UrlDocumentService urlDocumentService;

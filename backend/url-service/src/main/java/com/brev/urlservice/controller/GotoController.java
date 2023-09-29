@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,12 +22,14 @@ public class GotoController {
     private final MessagingService messagingService;
 
     @Autowired
+
     public GotoController(UrlDocumentService urlDocumentService, MessagingService messagingService) {
         this.urlDocumentService = urlDocumentService;
         this.messagingService = messagingService;
     }
 
     @GetMapping(value = "/{shortUrl}", name = "goTo")
+    @PreAuthorize("permitAll()")
     public void goTo(@NotBlank @PathVariable String shortUrl, HttpServletRequest request,
                      HttpServletResponse httpServletResponse) throws IOException {
         String originalUrl = urlDocumentService.getOriginalUrl(shortUrl);
