@@ -36,7 +36,7 @@ class GeneratorTest {
         int countBefore = sharedCount.getCount();
         for (int i = 0; i < appConfig.getRangeSize(); i++)
             // Empty the queue
-            System.out.println(generator.nextKey());
+            generator.nextKey();
         assertEquals(sharedCount.getCount(), countBefore);
     }
 
