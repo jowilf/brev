@@ -33,7 +33,6 @@ public class UrlDocumentServiceImpl implements UrlDocumentService {
         UrlDocument urlDocument = shortenUrlRequest.toUrlDocument();
         urlDocument.setShortUrl(shortUrl);
         urlDocument.setUserId(userId);
-//        urlDocument.setCreatedAt(OffsetDateTime.now());
         urlDocument = urlDocumentRepository.save(urlDocument);
         cacheService.markShortUrlAsTaken(shortUrl);
         return urlDocument;
