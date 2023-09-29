@@ -17,5 +17,5 @@ jobs:
           java-version: '17'
           cache: 'maven'
       - name: Test with Maven
-        run: mvn test -f backend/pom.xml 
+        run: mvn test -f backend/pom.xml -q
 
