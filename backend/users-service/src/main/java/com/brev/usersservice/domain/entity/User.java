@@ -24,8 +24,7 @@ import java.util.List;
 @Table(name = "users", indexes = @Index(columnList = "username"))
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(generator = "user-id-generator")
-    @SequenceGenerator(name = "user-id-generator", sequenceName = "user_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "username", unique = true, nullable = false, length = 100)
     private String username;
