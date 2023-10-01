@@ -1,6 +1,6 @@
-resource "kubernetes_deployment" "users-service" {
+resource "kubernetes_deployment" "analytics-service" {
   metadata {
-    name = "users-service-deployment"
+    name = "analytics-service-deployment"
   }
 
   spec {
@@ -8,21 +8,21 @@ resource "kubernetes_deployment" "users-service" {
 
     selector {
       match_labels = {
-        "app.pod" = "users-service"
+        "app.pod" = "analytics-service"
       }
     }
 
     template {
       metadata {
         labels = {
-          "app.pod" = "users-service"
+          "app.pod" = "analytics-service"
         }
       }
 
       spec {
         container {
-          image             = "brev/users-service"
-          name              = "users-service"
+          image             = "brev/analytics-service"
+          name              = "analytics-service"
           image_pull_policy = "Never"
 
           env {
@@ -37,14 +37,14 @@ resource "kubernetes_deployment" "users-service" {
 
           env {
             name  = "SPRING_DATASOURCE_URL"
-            value = "jdbc:mysql:loadbalance://mysql-cluster.mysql:3306/${var.APP_NAME}?createDatabaseIfNotExist=true"
+            value = "jdbc:ch://clickhouse-clickhouse-cluster.clickhouse/${var.APP_NAME}?createDatabaseIfNotExist=true"
           }
 
           env {
             name = "SPRING_DATASOURCE_USERNAME"
             value_from {
               secret_key_ref {
-                name = "mysql-credentials"
+                name = "clickhouse-credentials"
                 key  = "username"
               }
             }
@@ -54,15 +54,10 @@ resource "kubernetes_deployment" "users-service" {
             name = "SPRING_DATASOURCE_PASSWORD"
             value_from {
               secret_key_ref {
-                name = "mysql-credentials"
+                name = "clickhouse-credentials"
                 key  = "password"
               }
             }
-          }
-
-          env {
-            name  = "SPRING_JPA_HIBERNATE_DDL_AUTO"
-            value = "create"
           }
 
           env {
@@ -71,36 +66,34 @@ resource "kubernetes_deployment" "users-service" {
           }
 
           env {
+            name  = "spring.kafka.bootstrap-servers"
+            value = "kafka.default.svc.cluster.local:9092"
+          }
+          env {
+            name  = "spring.kafka.consumer.security.protocol"
+            value = "SASL_PLAINTEXT"
+          }
+          env {
+            name  = "spring.kafka.consumer.properties.sasl.mechanism"
+            value = "SCRAM-SHA-256"
+          }
+
+          env {
+            name  = "spring.kafka.consumer.properties.sasl.jaas.config"
+            value = "org.apache.kafka.common.security.scram.ScramLoginModule required username=kafka-user password=kafka-password;"
+          }
+
+          env {
+            name  = "app.kgs-base-url"
+            value = "kgs-service.default.svc.cluster.local"
+          }
+
+          env {
             name = "JWT_SECRET"
             value_from {
               secret_key_ref {
                 name = "jwt-secret"
                 key  = "secret"
-              }
-            }
-          }
-
-          env {
-            name  = "JWT_ISSUER"
-            value = var.JWT_ISSUER
-          }
-
-          env {
-            name  = "JWT_TOKEN_TTL"
-            value = var.JWT_TOKEN_TTL
-          }
-
-          env {
-            name  = "app.super-admin.username"
-            value = var.SUPER_ADMIN_USERNAME
-          }
-
-          env {
-            name = "app.super-admin.password"
-            value_from {
-              secret_key_ref {
-                name = "users-service"
-                key  = "super-admin-password"
               }
             }
           }
@@ -127,17 +120,18 @@ resource "kubernetes_deployment" "users-service" {
   depends_on = [helm_release.mysql-cluster]
 }
 
-resource "kubernetes_service" "users-service" {
+resource "kubernetes_service" "analytics-service" {
   metadata {
-    name = "users-service"
+    name = "analytics-service"
   }
   spec {
     selector = {
-      "app.pod" = "users-service"
+      "app.pod" = "analytics-service"
     }
+    session_affinity = "ClientIP"
 
     port {
-      port        = 8080
+      port        = 8083
       target_port = "api"
     }
 

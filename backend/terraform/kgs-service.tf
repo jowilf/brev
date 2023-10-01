@@ -90,13 +90,12 @@ resource "kubernetes_service" "kgs-service" {
     selector = {
       "app.pod" = "kgs-service"
     }
-    session_affinity = "ClientIP"
 
     port {
-      port        = 8080
+      port        = 8081
       target_port = "api"
     }
 
-    type = "LoadBalancer"
+    type = "NodePort"
   }
 }

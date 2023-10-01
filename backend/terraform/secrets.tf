@@ -10,6 +10,17 @@ resource "kubernetes_secret" "mysql-credentials" {
 
   type = "kubernetes.io/basic-auth"
 }
+resource "kubernetes_secret" "clickhouse-credentials" {
+  metadata {
+    name = "clickhouse-credentials"
+  }
+  data = {
+    username = "analytics"
+    password = "password"
+  }
+
+  type = "kubernetes.io/basic-auth"
+}
 
 resource "kubernetes_secret" "jwt-secret" {
   metadata {
