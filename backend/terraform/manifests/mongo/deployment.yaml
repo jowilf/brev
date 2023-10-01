@@ -51,13 +51,13 @@ spec:
               - ReadWriteOnce
             resources:
               requests:
-                storage: 100M
+                storage: 100Mi
             selector:
               matchLabels:
                 # We set this labels when creating the volume
-                # (see below)
+                # (see pv.yaml)
                 type: data
-            storageClassName: default
+            storageClassName: hostpath
         - metadata:
             name: logs-volume
           spec:
@@ -65,57 +65,8 @@ spec:
               - ReadWriteOnce
             resources:
               requests:
-                storage: 100M
+                storage: 100Mi
             selector:
               matchLabels:
                 type: logs
-            storageClassName: default
-
-# the user credentials will be generated from this secret
-# once the credentials are generated, this secret is no longer required
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: url-service-password
-type: Opaque
-stringData:
-  password: "<your-password-here>"
-
----
-# Here we create 2 PVs
-# (one for data, one for logs)
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  labels:
-    type: data
-  name: data-volume-0
-spec:
-  accessModes:
-    - ReadWriteOnce
-  capacity:
-    storage: 100Mi
-  hostPath:
-    path: /opt/data/mongo-data-0
-    type: ""
-  storageClassName: default
-  volumeMode: Filesystem
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  labels:
-    type: logs
-  name: logs-volume-0
-spec:
-  accessModes:
-    - ReadWriteOnce
-  capacity:
-    storage: 100Mi
-  hostPath:
-    path: /opt/data/mongo-logs-0
-    type: ""
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: default
-  volumeMode: Filesystem
+            storageClassName: hostpath
