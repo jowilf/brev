@@ -80,6 +80,8 @@ resource "kubernetes_deployment" "kgs-service" {
       }
     }
   }
+
+  depends_on = [helm_release.zookeeper]
 }
 
 resource "kubernetes_service" "kgs-service" {

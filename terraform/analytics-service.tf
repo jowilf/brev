@@ -112,7 +112,7 @@ resource "kubernetes_deployment" "analytics-service" {
     }
   }
 
-  depends_on = [helm_release.mysql-cluster]
+  depends_on = [kubectl_manifest.clickhouse-cluster]
 }
 
 resource "kubernetes_service" "analytics-service" {

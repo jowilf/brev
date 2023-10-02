@@ -153,7 +153,7 @@ resource "kubernetes_deployment" "url-service" {
     }
   }
 
-  depends_on = [helm_release.mysql-cluster]
+  depends_on = [helm_release.kafka, helm_release.redis, kubectl_manifest.mongo-cluster]
 }
 
 resource "kubernetes_service" "url-service" {
