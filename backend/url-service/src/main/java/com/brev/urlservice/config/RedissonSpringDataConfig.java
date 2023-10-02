@@ -7,6 +7,7 @@ import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 import org.redisson.spring.data.connection.RedissonConnectionFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -23,14 +24,14 @@ public class RedissonSpringDataConfig {
         return new RedissonConnectionFactory(redisson);
     }
 
-    @Bean(destroyMethod = "shutdown")
-    public RedissonClient redisson(@Value("${spring.data.redis.url}") String redisUrl) throws IOException {
-        Config config = new Config();
-        config.useSingleServer()
-                .setAddress(redisUrl);
-        log.info(redisUrl);
-        return Redisson.create(config);
-    }
+//    @Bean(destroyMethod = "shutdown")
+//    public RedissonClient redisson(RedisProperties redisProperties) throws IOException {
+//        Config config = new Config();
+//        config.useSingleServer()
+//                .setPassword(redisProperties.getPassword())
+//                .setAddress(redisProperties.getUrl());
+//        return Redisson.create(config);
+//    }
 
     @Bean
     StringRedisTemplate stringRedisTemplate(RedisConnectionFactory redisConnectionFactory) {

@@ -1,15 +1,16 @@
 package com.brev.urlservice.service;
 
-import com.brev.urlservice.exception.ShortUrlTakenException;
-import com.brev.urlservice.repository.UrlDocumentRepository;
 import com.brev.urlservice.domain.document.UrlDocument;
 import com.brev.urlservice.domain.dto.ShortenUrlRequest;
+import com.brev.urlservice.exception.ShortUrlTakenException;
+import com.brev.urlservice.repository.UrlDocumentRepository;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
 
@@ -23,7 +24,7 @@ public class UrlDocumentServiceImpl implements UrlDocumentService {
 
     @Autowired
     public UrlDocumentServiceImpl(KeyGeneratorService keyGeneratorService, UrlDocumentRepository urlDocumentRepository,
-                                   CacheService cacheService) {
+                                  CacheService cacheService) {
         this.keyGeneratorService = keyGeneratorService;
         this.urlDocumentRepository = urlDocumentRepository;
         this.cacheService = cacheService;
@@ -88,11 +89,8 @@ public class UrlDocumentServiceImpl implements UrlDocumentService {
 
     @Override
     @Async
+    @Transactional
     public void setLastVisited(String shortUrl) {
-        urlDocumentRepository.findById(shortUrl)
-                .ifPresent(urlDocument -> {
-                    urlDocument.setLastVisited(OffsetDateTime.now());
-                    urlDocumentRepository.save(urlDocument);
-                });
+        urlDocumentRepository.updateLastVisited(shortUrl, OffsetDateTime.now());
     }
 }

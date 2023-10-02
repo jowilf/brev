@@ -66,11 +66,6 @@ resource "kubernetes_deployment" "users-service" {
           }
 
           env {
-            name  = "APP_KAFKA_TOPIC"
-            value = var.KAFKA_METRIC_TOPICS
-          }
-
-          env {
             name = "JWT_SECRET"
             value_from {
               secret_key_ref {
@@ -137,7 +132,7 @@ resource "kubernetes_service" "users-service" {
     }
 
     port {
-      port        = 8080
+      port        = 8083
       target_port = "api"
     }
 

@@ -84,11 +84,6 @@ resource "kubernetes_deployment" "analytics-service" {
           }
 
           env {
-            name  = "app.kgs-base-url"
-            value = "kgs-service.default.svc.cluster.local"
-          }
-
-          env {
             name = "JWT_SECRET"
             value_from {
               secret_key_ref {
@@ -128,10 +123,9 @@ resource "kubernetes_service" "analytics-service" {
     selector = {
       "app.pod" = "analytics-service"
     }
-    session_affinity = "ClientIP"
 
     port {
-      port        = 8083
+      port        = 8080
       target_port = "api"
     }
 

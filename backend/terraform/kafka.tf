@@ -9,7 +9,7 @@ resource "helm_release" "kafka" {
 
   set {
     name  = "broker.replicaCount"
-    value = "0"
+    value = "1"
   }
 
   set {
@@ -40,6 +40,28 @@ resource "helm_release" "kafka" {
   set {
     name  = "listeners.client.client.protocol"
     value = "SASL"
+  }
+
+  set {
+    name  = "extraConfig"
+    value = <<EOT
+offsets.topic.replication.factor=1
+transaction.state.log.replication.factor=1
+EOT
+  }
+  set {
+    name  = "controller.extraConfig"
+    value = <<EOT
+offsets.topic.replication.factor=1
+transaction.state.log.replication.factor=1
+EOT
+  }
+  set {
+    name  = "broker.extraConfig"
+    value = <<EOT
+offsets.topic.replication.factor=1
+transaction.state.log.replication.factor=1
+EOT
   }
 
   set {

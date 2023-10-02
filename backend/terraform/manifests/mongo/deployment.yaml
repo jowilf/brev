@@ -2,7 +2,7 @@
 apiVersion: mongodbcommunity.mongodb.com/v1
 kind: MongoDBCommunity
 metadata:
-  name: mdb
+  name: mongodb
 spec:
   members: 1
   type: ReplicaSet
@@ -19,6 +19,8 @@ spec:
         - name: clusterAdmin
           db: brev
         - name: userAdminAnyDatabase
+          db: brev
+        - name: dbOwner
           db: brev
       scramCredentialsSecretName: vg1e-ulv5
   additionalMongodConfig:
