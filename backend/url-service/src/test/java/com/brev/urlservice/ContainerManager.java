@@ -1,6 +1,8 @@
 package com.brev.urlservice;
 
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.MongoDBContainer;
@@ -11,7 +13,8 @@ import java.util.List;
 @TestConfiguration
 public class ContainerManager {
     public final static KafkaContainer kafka =
-            new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.4.0")).withKraft();
+            new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.4.0"))
+                    .withKraft();
 
     public final static GenericContainer<?> redis =
             new GenericContainer<>(DockerImageName.parse("redis/redis-stack-server:7.2.0-v2"));

@@ -8,25 +8,28 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.data.relational.core.dialect.AnsiDialect;
 import org.springframework.data.relational.core.dialect.Dialect;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import java.nio.charset.Charset;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
 
-@SpringBootApplication(scanBasePackages = {"com.brev"}, exclude = SecurityAutoConfiguration.class)
+@SpringBootApplication(scanBasePackages = {"com.brev"},
+        exclude = {SecurityAutoConfiguration.class, UserDetailsServiceAutoConfiguration.class})
 @Log
 public class AnalyticsServiceApplication {
 
@@ -40,11 +43,18 @@ public class AnalyticsServiceApplication {
     }
 
     @Bean
-    CommandLineRunner initDB(JdbcTemplate jdbcTemplate, @Value("classpath:create-db.sql") Resource createQuery) {
+    CommandLineRunner initDB(JdbcTemplate jdbcTemplate, KafkaTemplate<String, String> kafkaTemplate,
+                             @Value("classpath:create-db.sql") Resource createQuery) {
         return args -> {
+//            kafkaTemplate.send("hello", new Random().nextInt() + " th");
             jdbcTemplate.execute(createQuery.getContentAsString(Charset.defaultCharset()));
         };
     }
+
+//    @KafkaListener(topics = "hello")
+//    void listenHello(String hello) {
+//        log.log(Level.INFO, "Receive: " + hello);
+//    }
 
     @Bean
     @Profile("dev")

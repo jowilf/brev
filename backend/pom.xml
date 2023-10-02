@@ -35,7 +35,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
@@ -61,13 +64,14 @@
                     <version>3.4.0</version>
                     <configuration>
                         <from>
+                            <image>gcr.io/distroless/java17-debian12@sha256:5626fefd568faa244e0597439a2c87b86ce0cb40eada2948e6f131a3bab59f37</image>
 <!--                            <image>eclipse-temurin:17-jre-alpine</image>-->
-<!--                            <platforms>-->
-<!--                                <platform>-->
-<!--                                    <architecture>amd64</architecture>-->
-<!--                                    <os>linux</os>-->
-<!--                                </platform>-->
-<!--                            </platforms>-->
+                            <platforms>
+                                <platform>
+                                    <architecture>amd64</architecture>
+                                    <os>linux</os>
+                                </platform>
+                            </platforms>
                             <platforms>
                                 <platform>
                                     <architecture>arm64</architecture>

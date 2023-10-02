@@ -1,2 +1,4 @@
 .idea
 application-local.properties
+.terraform
+terraform.tfstate

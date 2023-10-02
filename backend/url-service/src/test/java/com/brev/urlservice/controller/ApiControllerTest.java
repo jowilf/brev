@@ -4,9 +4,7 @@ import com.brev.core.domain.Role;
 import com.brev.core.jwt.JwtTokenService;
 import com.brev.core.jwt.TokenInfo;
 import com.brev.urlservice.ContainerManager;
-import com.brev.urlservice.domain.document.UrlDocument;
 import com.brev.urlservice.service.CacheService;
-import jakarta.annotation.PostConstruct;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.*;
@@ -31,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Import(ContainerManager.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ActiveProfiles("test")
 class ApiControllerTest {
     public static MockWebServer mockBackEnd;
     private static String accessToken;
@@ -55,12 +54,11 @@ class ApiControllerTest {
     }
 
     @DynamicPropertySource
-    static void registerPgProperties(DynamicPropertyRegistry registry) {
-        registry.add("app.kgs-base-url", () -> "http://localhost:%s".formatted(mockBackEnd.getPort()));
-        registry.add("spring.kafka.bootstrap-servers", () -> ContainerManager.kafka.getBootstrapServers());
+    static void registerProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.kafka.bootstrap-servers", ContainerManager.kafka::getBootstrapServers);
         registry.add("spring.data.mongodb.uri", () -> ContainerManager.mongo.getConnectionString());
+        registry.add("app.kgs-base-url", () -> "http://localhost:%s".formatted(mockBackEnd.getPort()));
     }
-
     @BeforeEach
     void setup() {
         accessToken = jwtTokenService.generateToken(new TokenInfo(1, "user@example.com", Role.USER));
