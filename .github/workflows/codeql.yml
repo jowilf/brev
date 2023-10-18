@@ -53,6 +53,9 @@ jobs:
       uses: github/codeql-action/init@v2
       with:
         languages: ${{ matrix.language }}
+    
+    - name: Build Java project
+      run: mvn -B package -f backend/pom.xml -q
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
