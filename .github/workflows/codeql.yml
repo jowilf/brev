@@ -55,7 +55,7 @@ jobs:
         languages: ${{ matrix.language }}
     
     - name: Build Java project
-      run: mvn -B package -f backend/pom.xml -q
+      run: mvn -B package -f backend/pom.xml -q -DskipTests
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
